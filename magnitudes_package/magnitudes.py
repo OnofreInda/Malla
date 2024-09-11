@@ -17,6 +17,9 @@ class Magnitudes:
             self.data.append([magnitud[celda.VALOR],magnitud[celda.TIPO]])
             
     def calc_magnitud_bruta(self, unidades):
+        """
+        Cálcula la magnitud de las celdas en base a su dimension relativa
+        """
         rango = (unidades - self.unidades_est)
         magnitudes_brutas = []
         residuo = 0.0

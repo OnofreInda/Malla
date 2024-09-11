@@ -5,7 +5,7 @@ class Malla:
     Clase Malla - Permite dividir la ventana de la terminal en celdas, similar a una tabla o un documento de Excel.
 
     Parámetros:
-    ----------
+    ___________
     magnitud_filas : list
         Lista que contiene la cantidad de filas a crear en la terminal. 
         Cada elemento es una lista donde el campo [0] es el valor (en porcentaje o estático) 
@@ -84,6 +84,10 @@ class Malla:
         return celdas
     
     def malla_resize(self, unidades_lineas, unidades_columnas):
+        """
+        Actualiza las dimensiones de las celdas en proporcion a su magnitud establecida.
+        Se reciben como parametros la nueva cantidad de lineas y columnas de la terminal
+        """
         self.columnas = unidades_columnas
         self.lineas = unidades_lineas
         self.__calcular_celdas_xy()

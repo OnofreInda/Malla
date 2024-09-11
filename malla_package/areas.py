@@ -2,6 +2,52 @@ import curses
 from malla_package.celdas import celda
 
 class Area:
+    """
+    La clase área permite crear una ventana en un rango de celdas que son creadas por la clase malla.
+    
+    Parámetros:
+    ___________
+    malla : Malla
+        Recibe el objeto malla
+    cel_inicio_x : int
+        Posicion de inicio del area en las celdas del eje X
+    cel_inicio_y : int
+        posición de inicio del area en las celdas del eje Y
+    cel_fin_x : int
+        posición de fin del área en las celdas del eje X
+    cel_fin_y : int
+        posición de fin del área en las celdas del eje Y
+        
+    Atributos:
+    __________
+    rango_x : list
+        lista que contienen los valores de inicio y fin respectivamente en el eje X
+    rango_y : list
+        lista que contienen los valores de inicio y fin respectivamente en el eje Y
+    inicio_x : int
+        Columna de la terminal dónde inicia la ventana
+    inicio_y : int
+        Linea de la terminal dónde inicia la ventana
+    fin_x : int
+        Columna de la terminal dónde finaliza la ventana
+    fin_y : int
+        Linea de la terminal dónde finaliza la ventana
+    ancho_x : int
+        Ancho medido en columnas de la terminal
+    ancho_y : int
+        Ancho medida en lineas de la terminal
+    ventana : curses.Window
+        Objeto ventana del módulo curses
+        
+    Métodos:
+    ________
+    obtener_ventana : curses.Window
+        Retorna un objeto ventana del módulo curses, con las dimensiones del área
+    refrescar
+        refresca la ventana
+    actualizar_malla
+        Actualiza el tamaño de la ventana con relacion a las nuevas proporciones de la malla
+    """
     def __init__(self, malla, cel_inicio_x, cel_inicio_y, cel_fin_x, cel_fin_y):
         self.rango_x = [cel_inicio_x, cel_fin_x]
         self.rango_y = [cel_inicio_y, cel_fin_y]
