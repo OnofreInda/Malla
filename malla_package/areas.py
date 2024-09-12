@@ -55,11 +55,10 @@ class Area:
         self.inicio_y = 0
         self.fin_x = 0
         self.fin_y = 0
-        
+        self.ancho_x = 0
+        self.ancho_y = 0
         self.__obtener_posicion_xy(malla)
-        
-        self.ancho_x = self.fin_x - self.inicio_x
-        self.ancho_y = self.fin_y - self.inicio_y
+        self.__calcular_anchos()
         self.ventana = self.obtener_ventana()
     
     def __obtener_posicion_xy(self, malla):
@@ -71,6 +70,10 @@ class Area:
     def __obtener_posicion(self, celdas, celda, inicio_fin):
         return celdas[celda][inicio_fin]
     
+    def __calcular_anchos(self):
+        self.ancho_x = self.fin_x - self.inicio_x
+        self.ancho_y = self.fin_y - self.inicio_y
+    
     def obtener_ventana(self):
         return curses.newwin(self.ancho_y, self.ancho_x, self.inicio_y, self.inicio_x)
         
@@ -79,8 +82,5 @@ class Area:
     
     def actualizar_malla(self, malla):
         self.__obtener_posicion_xy(malla)
-        self.ancho_x = self.fin_x - self.inicio_x
-        self.ancho_y = self.fin_y - self.inicio_y
-        self.ventana.resize(self.ancho_y, self.ancho_x)
-        self.ventana.mvwin(self.inicio_y, self.inicio_x)
-        self.ventana.refresh()
+        self.__calcular_anchos()
+        self.ventana = self.obtener_ventana()
