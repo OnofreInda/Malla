@@ -88,6 +88,10 @@ class Malla:
         Actualiza las dimensiones de las celdas en proporcion a su magnitud establecida.
         Se reciben como parametros la nueva cantidad de lineas y columnas de la terminal
         """
-        self.columnas = unidades_columnas
-        self.lineas = unidades_lineas
-        self.__calcular_celdas_xy()
+        if (unidades_columnas != self.columnas):
+            self.columnas = unidades_columnas
+            self.celdas_x = self.__calcular_celdas(self.magnitud_rel[1], unidades_columnas)
+            
+        if (unidades_lineas != self.lineas):
+            self.lineas = unidades_lineas
+            self.celdas_y = self.__calcular_celdas(self.magnitud_rel[0], unidades_lineas)
