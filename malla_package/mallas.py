@@ -103,7 +103,7 @@ class Malla:
         self.inicio_y = y
         self.__calcular_celdas()
         
-class Malla_en_area(Malla):
+class MallaArea(Malla):
     def __init__(self, magnitud_filas, magnitud_columnas, unidades_lineas, unidades_columnas, area):
         self.area = area
         super().__init__(magnitud_filas, magnitud_columnas, unidades_lineas, unidades_columnas)
