@@ -100,7 +100,7 @@ class Malla:
             self.lineas = lineas
             self.__calcular_celdas_y()
 
-    def __set_puntos_inicio(self, x,y):
+    def set_puntos_inicio(self, x,y):
         """Define la posicion de la esquina superior izquierda de la malla"""
         self.__inicio_x = x
         self.__inicio_y = y
@@ -119,8 +119,8 @@ class MallaArea(Malla):
     def __init__(self, magnitud_filas, magnitud_columnas, unidades_lineas, unidades_columnas, area):
         self.area = area
         super().__init__(magnitud_filas, magnitud_columnas, unidades_lineas, unidades_columnas)
-        super().__set_puntos_inicio(self.area.inicio_x, self.area.inicio_y)
+        super().set_puntos_inicio(self.area.inicio_x, self.area.inicio_y)
         
     def redimensionar(self, unidades_lineas, unidades_columnas):
-        super().__set_puntos_inicio(self.area.inicio_x, self.area.inicio_y)
+        super().set_puntos_inicio(self.area.inicio_x, self.area.inicio_y)
         super().redimensionar(unidades_lineas, unidades_columnas)

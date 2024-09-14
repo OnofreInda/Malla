@@ -41,12 +41,12 @@ class Area:
         
     Métodos:
     ________
-    obtener_ventana : curses.Window
-        Retorna un objeto ventana del módulo curses, con las dimensiones del área
     refrescar
         refresca la ventana
     actualizar_malla
         Actualiza el tamaño de la ventana con relacion a las nuevas proporciones de la malla
+    generar_ventana
+        Genera un objeto curses.Window dentro del objeto
     """
     def __init__(self, malla, cel_inicio_x, cel_inicio_y, cel_fin_x, cel_fin_y):
         self.malla = malla
@@ -59,8 +59,9 @@ class Area:
         self.ancho_x = int
         self.ancho_y = int
         self.ventana = curses.window
+        self.carac_ventana = {}
         self.__actualizar_posiciones()
-        self.__generar_ventana()
+        self.generar_ventana()
     
     def __obtener_posicion_x(self):
         """Define la posicion de inicio y fin del área en X"""
@@ -86,17 +87,38 @@ class Area:
         self.__obtener_posicion_y()
         self.__calcular_anchos()
             
-    def __generar_ventana(self):
+    def __aplicar_atributos(self):
+        for atributo in self.carac_ventana.items():
+            if atributo[0] == "color":
+                self.ventana.bkgd(' ', curses.color_pair(atributo[1]))
+            if atributo[0] == "attron":
+                self.ventana.attron(atributo[1])
+            
+    def agregar_atributo(self, nombre, valor):
+        """
+        Agrega valores que se agregaran como atributos del objeto curse.window correspondientemente
+        Solo se admiten 2 tipos de nombre: color y attron
+        color para cambiar el fondo y attron para cambiar añadir atributos al conjunto background de curse.window
+        """
+        self.carac_ventana.update({nombre.lower() : valor})
+        self.generar_ventana()
+        
+    def generar_ventana(self):
         """Genera un objeto curses.Window por medio del método curses.newwin()"""
         self.ventana = curses.newwin(self.ancho_y, self.ancho_x, self.inicio_y, self.inicio_x)
+        self.__aplicar_atributos()
 
-    def __redimensionar_celda(self):
-        """Intenta redimensionar y mover el área en la terminal, si no, la destruye y crea una con nueva posicion y dimensiones"""
+    def actualizar(self):
         try:
             self.ventana.resize(self.ancho_y, self.ancho_x)
             self.ventana.mvwin(self.inicio_y, self.inicio_x)
         except:
-            self.__generar_ventana()
+            self.generar_ventana()
+
+    def __actualizar_area(self):
+        """Intenta redimensionar y mover el área en la terminal, si no, la destruye y crea una con nueva posicion y dimensiones"""
+        self.__actualizar_posiciones()
+        self.actualizar()
         
     def mover_celda_x(self, x):
         """Mueve el área a una celda X de la malla"""
@@ -105,8 +127,7 @@ class Area:
         if (distancia <= celdas):
             self.rango_x[celda.INICIO] = x
             self.rango_x[celda.FIN] = self.rango_x[celda.FIN] + distancia if (self.rango_x[celda.FIN] + distancia) <= celdas else celdas
-            self.__actualizar_posiciones()
-            self.__redimensionar_celda()
+            self.__actualizar_area()
             
     def mover_celda_y(self, y):
         """Mueve el área a una celda Y de la malla"""
@@ -115,8 +136,7 @@ class Area:
         if (distancia <= celdas):
             self.rango_y[celda.INICIO] = y
             self.rango_y[celda.FIN] = self.rango_y[celda.FIN] + distancia if self.rango_y[celda.FIN] + distancia <= celdas else celdas
-            self.__actualizar_posiciones()
-            self.__redimensionar_celda()
+            self.__actualizar_area()
             
     def refrescar(self):
         """Refresca la ventana"""
@@ -125,5 +145,4 @@ class Area:
     def actualizar_malla(self, malla):
         """Actualiza la malla"""
         self.malla = malla
-        self.__actualizar_posiciones()
-        self.__generar_ventana()
+        self.__actualizar_area()
