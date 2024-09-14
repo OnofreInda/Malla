@@ -95,7 +95,7 @@ class Area:
     def mover_celda_x(self, x):
         distancia = x - self.rango_x[celda.INICIO]
         celdas = len(self.malla.celdas_x) - 1
-        if (distancia <= celdas and distancia >= 0):
+        if (distancia <= celdas):
             self.rango_x[celda.INICIO] = x
             self.rango_x[celda.FIN] = self.rango_x[celda.FIN] + distancia if (self.rango_x[celda.FIN] + distancia) <= celdas else celdas
             self.__actualizar_posiciones()
@@ -104,7 +104,7 @@ class Area:
     def mover_celda_y(self, y):
         distancia = y - self.rango_y[celda.INICIO]
         celdas = len(self.malla.celdas_y) - 1
-        if (distancia <= celdas and distancia >= 0):
+        if (distancia <= celdas):
             self.rango_y[celda.INICIO] = y
             self.rango_y[celda.FIN] = self.rango_y[celda.FIN] + distancia if self.rango_y[celda.FIN] + distancia <= celdas else celdas
             self.__actualizar_posiciones()
