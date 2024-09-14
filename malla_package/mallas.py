@@ -42,36 +42,21 @@ class Malla:
         self.magnitud_rel = [magnitud_filas, magnitud_columnas] # Pienso cambiar esto pronto
         self.columnas = unidades_columnas # Cantidad de columnas en la terminal
         self.lineas = unidades_lineas # Cantidad de lineas en la terminal
-        self.celdas_y = 0
-        self.celdas_x = 0
+        self.celdas_y = []
+        self.celdas_x = []
+        self.inicio_y = 0
+        self.inicio_x = 0
         
-        self.__calcular_celdas_xy()
+        self.__calcular_celdas()
     
-    def __calcular_celdas_xy(self):
-        self.celdas_y = self.__calcular_celdas(self.magnitud_rel[0], self.lineas) # Se calculan las dimensiones de las celdas del eje Y
-        self.celdas_x = self.__calcular_celdas(self.magnitud_rel[1], self.columnas) # Se calculan las dimensiones de las celdas del eje X
-
-    def __calcular_celdas(self, magnitud_rel, unidades):
-        """
-        Cálcula las dimensiones de las celdas
+    def __calcular_celdas(self):
+        self.__calcular_celdas_y(); self.__calcular_celdas_x()
+    
+    def __calcular_celdas_y(self):
+        self.celdas_y.clear()
+        magnitudes = Magnitudes(self.magnitud_rel[0]).calc_magnitud_bruta(self.lineas)
         
-        Parámetros:
-        ___________
-        magnitud_rel : list
-            lista que contiene la cantidad de celdas a crear
-        
-        unidades : int
-            cantidad de unidades del eje correspondiente que se van a dividir entre las celdas
-        
-        Retorna:
-        ________
-        list
-            Una lista en la que cada elemento es otra lista dónde el campo [0] contiene el inicio de la celda y el campo [1] contiene el fin de la misma
-        """
-        celdas = []
-        magnitudes = Magnitudes(magnitud_rel).calc_magnitud_bruta(unidades)
-        
-        fin_ant = 0
+        fin_ant = self.inicio_y
         inicio_act = 0
         fin_act = 0
         
@@ -79,20 +64,32 @@ class Malla:
             inicio_act = fin_ant
             fin_act = fin_ant + magnitud
             fin_ant = fin_act
-            celdas.append([inicio_act,fin_act])
+            self.celdas_y.append([inicio_act,fin_act])
             
-        return celdas
+    def __calcular_celdas_x(self):
+        self.celdas_x.clear()
+        magnitudes = Magnitudes(self.magnitud_rel[1]).calc_magnitud_bruta(self.columnas)
+        
+        fin_ant = self.inicio_x
+        inicio_act = 0
+        fin_act = 0
+        
+        for magnitud in magnitudes:
+            inicio_act = fin_ant
+            fin_act = fin_ant + magnitud
+            fin_ant = fin_act
+            self.celdas_x.append([inicio_act,fin_act])
     
     def __actualizar_columnas(self, columnas):
         if (columnas != self.columnas):
             self.columnas = columnas
-            self.celdas_x = self.__calcular_celdas(self.magnitud_rel[1], columnas)
+            self.__calcular_celdas_x()
             
     def __actualizar_lineas(self, lineas):
         if (lineas != self.lineas):
             self.lineas = lineas
-            self.celdas_y = self.__calcular_celdas(self.magnitud_rel[0], lineas)
-    
+            self.__calcular_celdas_y()
+            
     def redimensionar(self, unidades_lineas, unidades_columnas):
         """
         Actualiza las dimensiones de las celdas en proporcion a su magnitud establecida.
@@ -100,3 +97,18 @@ class Malla:
         """
         self.__actualizar_columnas(unidades_columnas)
         self.__actualizar_lineas(unidades_lineas)
+    
+    def set_puntos_inicio(self, x,y):
+        self.inicio_x = x
+        self.inicio_y = y
+        self.__calcular_celdas()
+        
+class Malla_en_area(Malla):
+    def __init__(self, magnitud_filas, magnitud_columnas, unidades_lineas, unidades_columnas, area):
+        self.area = area
+        super().__init__(magnitud_filas, magnitud_columnas, unidades_lineas, unidades_columnas)
+        super().set_puntos_inicio(self.area.inicio_x, self.area.inicio_y)
+        
+    def redimensionar(self, unidades_lineas, unidades_columnas):
+        super().set_puntos_inicio(self.area.inicio_x, self.area.inicio_y)
+        super().redimensionar(unidades_lineas, unidades_columnas)

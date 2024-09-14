@@ -21,9 +21,9 @@ class Area:
     Atributos:
     __________
     rango_x : list
-        lista que contienen los valores de inicio y fin respectivamente en el eje X
+        lista que contienen los valores de las celdas de inicio y fin respectivamente en el eje X
     rango_y : list
-        lista que contienen los valores de inicio y fin respectivamente en el eje Y
+        lista que contienen los valores de las celdas de inicio y fin respectivamente en el eje Y
     inicio_x : int
         Columna de la terminal dónde inicia la ventana
     inicio_y : int
@@ -52,12 +52,12 @@ class Area:
         self.malla = malla
         self.rango_x = [cel_inicio_x, cel_fin_x]
         self.rango_y = [cel_inicio_y, cel_fin_y]
-        self.inicio_x = float
-        self.inicio_y = float
-        self.fin_x = float
-        self.fin_y = float
-        self.ancho_x = float
-        self.ancho_y = float
+        self.inicio_x = int
+        self.inicio_y = int
+        self.fin_x = int
+        self.fin_y = int
+        self.ancho_x = int
+        self.ancho_y = int
         self.ventana = curses.window
         self.__actualizar_posiciones()
         self.__generar_ventana()
