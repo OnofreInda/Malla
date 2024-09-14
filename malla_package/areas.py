@@ -63,10 +63,12 @@ class Area:
         self.__generar_ventana()
     
     def __obtener_posicion_x(self):
+        """Define la posicion de inicio y fin del área en X"""
         self.inicio_x = int(self.__obtener_posicion(self.malla.celdas_x, self.rango_x[celda.INICIO], celda.INICIO))
         self.fin_x = int(self.__obtener_posicion(self.malla.celdas_x, self.rango_x[celda.FIN], celda.FIN))
 
     def __obtener_posicion_y(self):
+        """Define la posicion de inicio y fin del área en Y"""
         self.inicio_y = int(self.__obtener_posicion(self.malla.celdas_y, self.rango_y[celda.INICIO], celda.INICIO))
         self.fin_y = int(self.__obtener_posicion(self.malla.celdas_y, self.rango_y[celda.FIN], celda.FIN))
 
@@ -74,18 +76,22 @@ class Area:
         return celdas[celda][inicio_fin]
     
     def __calcular_anchos(self):
+        """Define las dimensiones del área"""
         self.ancho_x = self.fin_x - self.inicio_x
         self.ancho_y = self.fin_y - self.inicio_y
         
     def __actualizar_posiciones(self):
+        """Actualiza las posicion de inicio y fin del área así como sus dimensiones"""
         self.__obtener_posicion_x()
         self.__obtener_posicion_y()
         self.__calcular_anchos()
             
     def __generar_ventana(self):
+        """Genera un objeto curses.Window por medio del método curses.newwin()"""
         self.ventana = curses.newwin(self.ancho_y, self.ancho_x, self.inicio_y, self.inicio_x)
 
     def __redimensionar_celda(self):
+        """Intenta redimensionar y mover el área en la terminal, si no, la destruye y crea una con nueva posicion y dimensiones"""
         try:
             self.ventana.resize(self.ancho_y, self.ancho_x)
             self.ventana.mvwin(self.inicio_y, self.inicio_x)
@@ -93,6 +99,7 @@ class Area:
             self.__generar_ventana()
         
     def mover_celda_x(self, x):
+        """Mueve el área a una celda X de la malla"""
         distancia = x - self.rango_x[celda.INICIO]
         celdas = len(self.malla.celdas_x) - 1
         if (distancia <= celdas):
@@ -102,6 +109,7 @@ class Area:
             self.__redimensionar_celda()
             
     def mover_celda_y(self, y):
+        """Mueve el área a una celda Y de la malla"""
         distancia = y - self.rango_y[celda.INICIO]
         celdas = len(self.malla.celdas_y) - 1
         if (distancia <= celdas):
@@ -111,9 +119,11 @@ class Area:
             self.__redimensionar_celda()
             
     def refrescar(self):
+        """Refresca la ventana"""
         self.ventana.refresh()
     
     def actualizar_malla(self, malla):
+        """Actualiza la malla"""
         self.malla = malla
         self.__actualizar_posiciones()
         self.__generar_ventana()
