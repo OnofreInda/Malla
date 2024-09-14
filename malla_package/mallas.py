@@ -83,15 +83,20 @@ class Malla:
             
         return celdas
     
-    def malla_resize(self, unidades_lineas, unidades_columnas):
+    def __actualizar_columnas(self, columnas):
+        if (columnas != self.columnas):
+            self.columnas = columnas
+            self.celdas_x = self.__calcular_celdas(self.magnitud_rel[1], columnas)
+            
+    def __actualizar_lineas(self, lineas):
+        if (lineas != self.lineas):
+            self.lineas = lineas
+            self.celdas_y = self.__calcular_celdas(self.magnitud_rel[0], lineas)
+    
+    def redimensionar(self, unidades_lineas, unidades_columnas):
         """
         Actualiza las dimensiones de las celdas en proporcion a su magnitud establecida.
         Se reciben como parametros la nueva cantidad de lineas y columnas de la terminal
         """
-        if (unidades_columnas != self.columnas):
-            self.columnas = unidades_columnas
-            self.celdas_x = self.__calcular_celdas(self.magnitud_rel[1], unidades_columnas)
-            
-        if (unidades_lineas != self.lineas):
-            self.lineas = unidades_lineas
-            self.celdas_y = self.__calcular_celdas(self.magnitud_rel[0], unidades_lineas)
+        self.__actualizar_columnas(unidades_columnas)
+        self.__actualizar_lineas(unidades_lineas)
