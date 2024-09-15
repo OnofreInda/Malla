@@ -59,7 +59,8 @@ class Area:
         self.ancho_x = int
         self.ancho_y = int
         self.ventana = curses.window
-        self.carac_ventana = {}
+        self.atrib_ventana = []
+        self.fondo_ventana = 0
         self.__actualizar_posiciones()
         self.generar_ventana()
     
@@ -87,26 +88,42 @@ class Area:
         self.__obtener_posicion_y()
         self.__calcular_anchos()
             
-    def __aplicar_atributos(self):
-        for atributo in self.carac_ventana.items():
-            if atributo[0] == "color":
-                self.ventana.bkgd(' ', curses.color_pair(atributo[1]))
-            if atributo[0] == "attron":
-                self.ventana.attron(atributo[1])
+    def __aplicar_propiedades(self):
+        for atributo in self.atrib_ventana:
+            self.ventana.attron(atributo)
             
-    def agregar_atributo(self, nombre, valor):
+    def agregar_propiedad(self, propiedad):
         """
         Agrega valores que se agregaran como atributos del objeto curse.window correspondientemente
         Solo se admiten 2 tipos de nombre: color y attron
         color para cambiar el fondo y attron para cambiar añadir atributos al conjunto background de curse.window
         """
-        self.carac_ventana.update({nombre.lower() : valor})
-        self.generar_ventana()
+        if self.atrib_ventana.count(propiedad) > 0: pass
+        self.atrib_ventana = propiedad
+        self.ventana.attron(propiedad)
+        self.ventana.refresh()
+        
+    def eliminar_propiedad(self, propiedad):
+        self.atrib_ventana.pop(propiedad)
+        self.ventana.attroff(propiedad)
+        self.ventana.refresh()
+        
+    def definir_propiedades(self, propiedades):
+        self.atrib_ventana = propiedades
+        
+    def cambiar_fondo(self, fondo):
+        self.fondo_ventana = fondo
+        self.refrescar_fondo()
+
+    def refrescar_fondo(self):
+        self.ventana.bkgd(' ', curses.color_pair(self.fondo_ventana))
+        self.ventana.refresh()
         
     def generar_ventana(self):
         """Genera un objeto curses.Window por medio del método curses.newwin()"""
         self.ventana = curses.newwin(self.ancho_y, self.ancho_x, self.inicio_y, self.inicio_x)
-        self.__aplicar_atributos()
+        self.refrescar_fondo()
+        self.__aplicar_propiedades()
 
     def actualizar(self):
         try:
