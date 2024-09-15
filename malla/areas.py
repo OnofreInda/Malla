@@ -91,25 +91,22 @@ class Area:
     def __aplicar_propiedades(self):
         for atributo in self.atrib_ventana:
             self.ventana.attron(atributo)
+        self.refrescar()
             
     def agregar_propiedad(self, propiedad):
-        """
-        Agrega valores que se agregaran como atributos del objeto curse.window correspondientemente
-        Solo se admiten 2 tipos de nombre: color y attron
-        color para cambiar el fondo y attron para cambiar añadir atributos al conjunto background de curse.window
-        """
-        if self.atrib_ventana.count(propiedad) > 0: pass
-        self.atrib_ventana = propiedad
-        self.ventana.attron(propiedad)
-        self.ventana.refresh()
+        if self.atrib_ventana.count(propiedad) == 0:
+            self.atrib_ventana.append(propiedad)
+            self.ventana.attron(propiedad)
+            self.refrescar()
         
     def eliminar_propiedad(self, propiedad):
         self.atrib_ventana.pop(propiedad)
         self.ventana.attroff(propiedad)
         self.ventana.refresh()
         
-    def definir_propiedades(self, propiedades):
+    def definir_propiedades(self, propiedades=[]):
         self.atrib_ventana = propiedades
+        self.__aplicar_propiedades()
         
     def cambiar_fondo(self, fondo):
         self.fondo_ventana = fondo
