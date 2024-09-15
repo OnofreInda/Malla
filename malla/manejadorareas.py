@@ -1,7 +1,6 @@
 import malla
 import malla.areas
 import malla.mallas
-import curses
 
 class ManejadorAreas:
     def __init__(self, p_malla, ventana_padre):
@@ -13,6 +12,7 @@ class ManejadorAreas:
         self.areas.update({
             nombre: malla.areas.Area(self.malla, inicio_x, inicio_y, fin_x, fin_y)
         })
+        return self.areas[nombre]
         
     def eliminar(self, nombre):
         self.areas[nombre].ventana.erase()
@@ -26,6 +26,12 @@ class ManejadorAreas:
         
     def get_area(self, nombre):
         return self.areas[nombre]
+
+    def get_ancho_x(self, nombre):
+        return self.areas[nombre].ancho_x
+    
+    def get_ancho_y(self, nombre):
+        return self.areas[nombre].ancho_y
 
     def get_ventana(self, nombre):
         return self.areas[nombre].ventana
