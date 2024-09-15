@@ -38,6 +38,10 @@ class Area:
         Ancho medida en lineas de la terminal
     ventana : curses.Window
         Objeto ventana del módulo curses
+    atrib_ventana : list
+        lista de atributos que se pasan como parametros al método attron() del objeto curses.window
+    fondo_ventana : int
+        Número de color de fondo, debe corresponder a algun init_color()
         
     Métodos:
     ________
@@ -47,6 +51,14 @@ class Area:
         Actualiza el tamaño de la ventana con relacion a las nuevas proporciones de la malla
     generar_ventana
         Genera un objeto curses.Window dentro del objeto
+    refrescar_fondo
+        Refresca el fondo de la ventana
+    cambiar_fondo
+        Cambia el valor de fondo_ventana y refresca el fondo
+    agregar_propiedad
+        Recibe un atributo que es pasado como parametro a curses.window.attron()
+    eliminar_propiedad
+        Elimina un elemento de atrib_ventana si es que existe y se pasa como parametro a curses.window.attroff()
     """
     def __init__(self, malla, cel_inicio_x, cel_inicio_y, cel_fin_x, cel_fin_y):
         self.malla = malla
@@ -89,30 +101,39 @@ class Area:
         self.__calcular_anchos()
             
     def __aplicar_propiedades(self):
+        """Aplica los atributos que se encuentran en self.atrib_ventana a self.ventana"""
         for atributo in self.atrib_ventana:
             self.ventana.attron(atributo)
         self.refrescar()
             
     def agregar_propiedad(self, propiedad):
+        """Agrega una propiedad por el método attron del objeto self.ventana y tambien es agregado al self.atrib_ventana"""
         if self.atrib_ventana.count(propiedad) == 0:
             self.atrib_ventana.append(propiedad)
             self.ventana.attron(propiedad)
             self.refrescar()
         
     def eliminar_propiedad(self, propiedad):
+        """Elimina un elemento de atrib_ventana y del objeto self.ventana utilizando el método attroff"""
         self.atrib_ventana.pop(propiedad)
         self.ventana.attroff(propiedad)
         self.ventana.refresh()
         
     def definir_propiedades(self, propiedades=[]):
+        """
+        Define el valor de atrib_ventana el cual tiene que ser una lista de elementos aplicables a una ventana
+        aplicables por medio de curses.window.attron() y son aplicados a la misma
+        """
         self.atrib_ventana = propiedades
         self.__aplicar_propiedades()
         
     def cambiar_fondo(self, fondo):
+        """Cambia el valor de self.fondo_ventana y actualiza el fondo de la ventana"""
         self.fondo_ventana = fondo
         self.refrescar_fondo()
 
     def refrescar_fondo(self):
+        """Asigna el fondo por medio de curses.window.bkgd() y refresca la ventana"""
         self.ventana.bkgd(' ', curses.color_pair(self.fondo_ventana))
         self.ventana.refresh()
         
@@ -123,6 +144,7 @@ class Area:
         self.__aplicar_propiedades()
 
     def actualizar(self):
+        """Intenta actualizar la posicion y dimensiones de la ventana, si no, la destruye y crea una con nueva posicion y dimensiones"""
         try:
             self.ventana.resize(self.ancho_y, self.ancho_x)
             self.ventana.mvwin(self.inicio_y, self.inicio_x)
@@ -130,7 +152,7 @@ class Area:
             self.generar_ventana()
 
     def __actualizar_area(self):
-        """Intenta redimensionar y mover el área en la terminal, si no, la destruye y crea una con nueva posicion y dimensiones"""
+        """Actualiza la posicion y las dimensiones de la ventana, luego llama a la funcion self.actualizar()"""
         self.__actualizar_posiciones()
         self.actualizar()
         
