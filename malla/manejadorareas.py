@@ -48,6 +48,9 @@ class ManejadorAreas:
         for area in self.areas.values():
             area.actualizar_malla(self.malla)
             
+    def cambiar_fondo(self, nombre, fondo):
+        self.areas[nombre].cambiar_fondo(fondo)
+            
     def refrescar_todo(self):
         for area in self.areas.values():
             area.ventana.refresh()
