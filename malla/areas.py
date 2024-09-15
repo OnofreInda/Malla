@@ -1,5 +1,5 @@
 import curses
-from malla_package.celdas import celda
+from malla.celdas import celda
 
 class Area:
     """

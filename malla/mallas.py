@@ -1,4 +1,4 @@
-from magnitudes_package.magnitudes import Magnitudes
+from malla.magnitudes import Magnitudes
 
 class Malla:
     """
