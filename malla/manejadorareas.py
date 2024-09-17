@@ -59,15 +59,15 @@ class ManejadorAreas:
         """Retrona el ancho del area con ese nombre"""
         return self.areas[nombre].ancho_x
     
-    def get_ancho_y(self, nombre):
+    def get_largo_y(self, nombre):
         """Retorna el largo del area con ese nombre"""
-        return self.areas[nombre].ancho_y
+        return self.areas[nombre].largo_y
 
     def get_ventana(self, nombre):
         """Retorna la ventana del area con ese nombre"""
         return self.areas[nombre].ventana
         
-    def actualizar(self):
+    def actualizar_todo(self):
         """Actualiza las posiciones y tamaños de todas las areas, luego refresca las áreas"""
         self.redimensionar_todo()
         self.refrescar_todo()

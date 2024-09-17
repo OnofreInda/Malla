@@ -34,7 +34,7 @@ class Area:
         Linea de la terminal dónde finaliza la ventana
     ancho_x : int
         Ancho medido en columnas de la terminal
-    ancho_y : int
+    largo_y: int
         Ancho medida en lineas de la terminal
     ventana : curses.Window
         Objeto ventana del módulo curses
@@ -69,7 +69,7 @@ class Area:
         self.fin_x = int
         self.fin_y = int
         self.ancho_x = int
-        self.ancho_y = int
+        self.largo_y= int
         self.ventana = curses.window
         self.atrib_ventana = []
         self.fondo_ventana = 0
@@ -92,7 +92,7 @@ class Area:
     def __calcular_anchos(self):
         """Define las dimensiones del área"""
         self.ancho_x = self.fin_x - self.inicio_x
-        self.ancho_y = self.fin_y - self.inicio_y
+        self.largo_y= self.fin_y - self.inicio_y
         
     def __actualizar_posiciones(self):
         """Actualiza las posicion de inicio y fin del área así como sus dimensiones"""
@@ -139,14 +139,14 @@ class Area:
         
     def generar_ventana(self):
         """Genera un objeto curses.Window por medio del método curses.newwin()"""
-        self.ventana = curses.newwin(self.ancho_y, self.ancho_x, self.inicio_y, self.inicio_x)
+        self.ventana = curses.newwin(self.largo_y, self.ancho_x, self.inicio_y, self.inicio_x)
         self.refrescar_fondo()
         self.__aplicar_propiedades()
 
     def actualizar(self):
         """Intenta actualizar la posicion y dimensiones de la ventana, si no, la destruye y crea una con nueva posicion y dimensiones"""
         try:
-            self.ventana.resize(self.ancho_y, self.ancho_x)
+            self.ventana.resize(self.largo_y, self.ancho_x)
             self.ventana.mvwin(self.inicio_y, self.inicio_x)
         except:
             self.generar_ventana()
