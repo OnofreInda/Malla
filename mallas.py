@@ -1,4 +1,4 @@
-from malla.magnitudes import Magnitudes
+from magnitudes import Magnitudes
 
 class Malla:
     """
@@ -6,40 +6,40 @@ class Malla:
 
     Parámetros:
     ___________
-    magnitud_filas : list
+    magnitud_filas: list
         Lista que contiene la cantidad de filas a crear en la terminal. 
         Cada elemento es una lista donde el campo [0] es el valor (en porcentaje o estático) 
         y el campo [1] indica el tipo de valor (True para estático, False para relativo).
         
-    magnitud_columnas : list
+    magnitud_columnas: list
         Lista que contiene la cantidad de columnas a crear en la terminal. 
         Cada elemento es una lista donde el campo [0] es el valor (en porcentaje o estático) 
         y el campo [1] indica el tipo de valor (True para estático, False para relativo).
         
-    unidades_lineas : int
+    unidades_lineas: int
         Cantidad de lineas existentes en la terminal.
         
-    unidades_columnas : int
+    unidades_columnas: int
         Cantidad de columnas existentes en la terminal.
         
     Atributos:
     __________
-    magnitud_rel : list
+    magnitud_rel: list
         Lista que contiene el valor de los parametros magnitud_filas y magnitud_columnas.
     
-    columnas : int
+    columnas: int
         Cantidad de columnas que contiene la terminal.
         
-    lineas : int
+    líneas: int
         Cantidad de lineas que tiene la terminal.
         
-    celdas_y : list
-    celdas_x : list
+    Celdas_y: list
+    celdas_x: list
         Es una lista que contiene los valores de inicio y fin para cada celda del eje correspondiente.
         Cada elemento es una lista donde el campo [0] es donde inicia esa celda y el campo [1] es donde termina.
         
-    __inicio_x : int
-    __inicio_y : int
+    __inicio_x: int
+    __inicio_y: int
         esquina superior izquierda de la terminal por dónde iniciará la malla (por defecto es el punto 0,0)
         estos atributos solo son modificables desde una clase heredada
     """

@@ -1,5 +1,6 @@
 import curses
-from malla.celdas import celda
+from celdas import celda
+
 
 class Area:
     """
@@ -60,6 +61,7 @@ class Area:
     eliminar_propiedad
         Elimina un elemento de atrib_ventana si es que existe y se pasa como parametro a curses.window.attroff()
     """
+
     def __init__(self, malla, cel_inicio_x, cel_inicio_y, cel_fin_x, cel_fin_y):
         self.malla = malla
         self.rango_x = [cel_inicio_x, cel_fin_x]
@@ -69,13 +71,14 @@ class Area:
         self.fin_x = int
         self.fin_y = int
         self.ancho_x = int
-        self.largo_y= int
+        self.largo_y = int
         self.ventana = curses.window
         self.atrib_ventana = []
         self.fondo_ventana = 0
+        self.texto = ""
         self.__actualizar_posiciones()
         self.generar_ventana()
-    
+
     def __obtener_posicion_x(self):
         """Define la posicion de inicio y fin del área en X"""
         self.inicio_x = int(self.__obtener_posicion(self.malla.celdas_x, self.rango_x[celda.INICIO], celda.INICIO))
@@ -88,37 +91,46 @@ class Area:
 
     def __obtener_posicion(self, celdas, celda, inicio_fin):
         return celdas[celda][inicio_fin]
-    
+
     def __calcular_anchos(self):
         """Define las dimensiones del área"""
         self.ancho_x = self.fin_x - self.inicio_x
-        self.largo_y= self.fin_y - self.inicio_y
-        
+        self.largo_y = self.fin_y - self.inicio_y
+
     def __actualizar_posiciones(self):
         """Actualiza las posicion de inicio y fin del área así como sus dimensiones"""
         self.__obtener_posicion_x()
         self.__obtener_posicion_y()
         self.__calcular_anchos()
-            
+
     def __aplicar_propiedades(self):
         """Aplica los atributos que se encuentran en self.atrib_ventana a self.ventana"""
         for atributo in self.atrib_ventana:
             self.ventana.attron(atributo)
+        if self.texto != "":
+            self.ventana.addstr(self.texto)
         self.refrescar()
-            
+
+    def set_text(self, text):
+        """Agrega texto a la ventana"""
+        self.texto = text
+        self.ventana.clear()
+        self.ventana.addstr(self.texto)
+        self.ventana.refresh()
+
     def agregar_propiedad(self, propiedad):
         """Agrega una propiedad por el método attron del objeto self.ventana y tambien es agregado al self.atrib_ventana"""
         if self.atrib_ventana.count(propiedad) == 0:
             self.atrib_ventana.append(propiedad)
             self.ventana.attron(propiedad)
             self.refrescar()
-        
+
     def eliminar_propiedad(self, propiedad):
         """Elimina un elemento de atrib_ventana y del objeto self.ventana utilizando el método attroff"""
         self.atrib_ventana.pop(propiedad)
         self.ventana.attroff(propiedad)
         self.ventana.refresh()
-        
+
     def definir_propiedades(self, propiedades=[]):
         """
         Define el valor de atrib_ventana el cual tiene que ser una lista de elementos aplicables a una ventana
@@ -126,7 +138,7 @@ class Area:
         """
         self.atrib_ventana = propiedades
         self.__aplicar_propiedades()
-        
+
     def cambiar_fondo(self, fondo):
         """Cambia el valor de self.fondo_ventana y actualiza el fondo de la ventana"""
         self.fondo_ventana = fondo
@@ -136,7 +148,7 @@ class Area:
         """Asigna el fondo por medio de curses.window.bkgd() y refresca la ventana"""
         self.ventana.bkgd(' ', curses.color_pair(self.fondo_ventana))
         self.ventana.refresh()
-        
+
     def generar_ventana(self):
         """Genera un objeto curses.Window por medio del método curses.newwin()"""
         self.ventana = curses.newwin(self.largo_y, self.ancho_x, self.inicio_y, self.inicio_x)
@@ -144,8 +156,11 @@ class Area:
         self.__aplicar_propiedades()
 
     def actualizar(self):
-        """Intenta actualizar la posicion y dimensiones de la ventana, si no, la destruye y crea una con nueva posicion y dimensiones"""
+        """Intenta actualizar la posicion y dimensiones de la ventana, si no, la destruye y crea una con nueva
+        posicion y dimensiones"""
         try:
+            if self.texto != "":
+                self.ventana.addstr(self.texto)
             self.ventana.resize(self.largo_y, self.ancho_x)
             self.ventana.mvwin(self.inicio_y, self.inicio_x)
         except:
@@ -155,29 +170,31 @@ class Area:
         """Actualiza la posicion y las dimensiones de la ventana, luego llama a la funcion self.actualizar()"""
         self.__actualizar_posiciones()
         self.actualizar()
-        
+
     def mover_celda_x(self, x):
         """Mueve el área a una celda X de la malla"""
         distancia = x - self.rango_x[celda.INICIO]
         celdas = len(self.malla.celdas_x) - 1
         if (distancia <= celdas):
             self.rango_x[celda.INICIO] = x
-            self.rango_x[celda.FIN] = self.rango_x[celda.FIN] + distancia if (self.rango_x[celda.FIN] + distancia) <= celdas else celdas
+            self.rango_x[celda.FIN] = self.rango_x[celda.FIN] + distancia if (self.rango_x[
+                                                                                  celda.FIN] + distancia) <= celdas else celdas
             self.__actualizar_area()
-            
+
     def mover_celda_y(self, y):
         """Mueve el área a una celda Y de la malla"""
         distancia = y - self.rango_y[celda.INICIO]
         celdas = len(self.malla.celdas_y) - 1
         if (distancia <= celdas):
             self.rango_y[celda.INICIO] = y
-            self.rango_y[celda.FIN] = self.rango_y[celda.FIN] + distancia if self.rango_y[celda.FIN] + distancia <= celdas else celdas
+            self.rango_y[celda.FIN] = self.rango_y[celda.FIN] + distancia if self.rango_y[
+                                                                                 celda.FIN] + distancia <= celdas else celdas
             self.__actualizar_area()
-            
+
     def refrescar(self):
         """Refresca la ventana"""
         self.ventana.refresh()
-    
+
     def actualizar_malla(self, malla):
         """Actualiza la malla"""
         self.malla = malla

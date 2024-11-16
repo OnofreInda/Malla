@@ -1,4 +1,4 @@
-from malla.celdas import celda
+from celdas import celda
 
 class Magnitudes:
     def __init__(self, magnitudes):

@@ -1,6 +1,6 @@
-import malla
-import malla.areas
-import malla.mallas
+from curses import window
+import areas
+import mallas
 
 class ManejadorAreas:
     """
@@ -26,7 +26,7 @@ class ManejadorAreas:
     malla : malla
         malla sobre la que se gestionarán las áreas
     """
-    def __init__(self, p_malla, ventana_padre):
+    def __init__(self, p_malla : mallas.Malla, ventana_padre : window):
         self.ventana_padre = ventana_padre
         self.areas = {}
         self.malla = p_malla
@@ -34,7 +34,7 @@ class ManejadorAreas:
     def crear(self, nombre, inicio_x, inicio_y, fin_x, fin_y):
         """Crea un objeto de tipo malla.areas.Area() le asigna un nombre y lo agrega al diccionario"""
         self.areas.update({
-            nombre: malla.areas.Area(self.malla, inicio_x, inicio_y, fin_x, fin_y)
+            nombre: areas.Area(self.malla, inicio_x, inicio_y, fin_x, fin_y)
         })
         return self.areas[nombre]
         
@@ -51,7 +51,7 @@ class ManejadorAreas:
         """Mueve el área con ese nombre a la celda y de la malla"""
         self.areas[nombre].mover_celda_y(y)
         
-    def get_area(self, nombre):
+    def get_area(self, nombre) -> areas.Area:
         """Retorna el area con ese nombre"""
         return self.areas[nombre]
 
@@ -63,7 +63,7 @@ class ManejadorAreas:
         """Retorna el largo del area con ese nombre"""
         return self.areas[nombre].largo_y
 
-    def get_ventana(self, nombre):
+    def get_ventana(self, nombre) -> window:
         """Retorna la ventana del area con ese nombre"""
         return self.areas[nombre].ventana
         
